@@ -10,42 +10,26 @@ import java.util.List;
 
 public class CoursePrinter {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/top";
-    private static final String USER_NAME = "root";
-    private static final String PASSWORD = "root";
-
     private PrintStream printer;
-    private Connection connection;
+    private Connection dbConnection;
     private List<Course> courses;
 
-    public CoursePrinter() {
+    public CoursePrinter(Connection dbConnection) {
+        if (dbConnection == null) throw new IllegalArgumentException("Database Connection cannot be Null");
+        this.dbConnection = dbConnection;
+        init();
     }
 
-    public void init() {
-        courses = new ArrayList<>();
-        printer = System.out;
-        getConnection();
+    private void init() {
+        this.courses = new ArrayList<>();
+        this.printer = System.out;
         collectData();
-    }
-
-    public void printData() {
-        printer.println("Вывожу данные в консоль:");
-        courses.forEach(printer::println);
-    }
-
-    private void getConnection() {
-        try {
-            connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
-            printer.println("Соединение с базой данных установлено!");
-        } catch (SQLException e) {
-            System.out.println("Соединение с базой данных не установлено!");
-        }
     }
 
     private void collectData() {
         String sqlQuery = "SELECT c.id, c.name, c.duration, c.type, c.description, t.name AS teacher_name, c.students_count, c.price, c.price_per_hour FROM courses AS c JOIN teachers AS t ON t.id = c.teacher_id";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
+        try (PreparedStatement preparedStatement = dbConnection.prepareStatement(sqlQuery)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Course nextCourse = Course.builder()
@@ -65,5 +49,10 @@ public class CoursePrinter {
             printer.println("Ошибка при работе с базой данных!");
         }
         printer.println("Данные собраны!");
+    }
+
+    public void printData() {
+        printer.println("Вывожу данные в консоль:");
+        courses.forEach(printer::println);
     }
 }
