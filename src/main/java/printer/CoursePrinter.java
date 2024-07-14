@@ -49,7 +49,7 @@ public class CoursePrinter {
         } catch (SQLException e) {
             printer.println("Ошибка при работе с базой данных!");
         }
-        printer.println("Данные собраны!");
+        printer.println("Данные по курсам собраны!");
     }
 
     public void printData() {
