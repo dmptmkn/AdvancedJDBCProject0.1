@@ -1,14 +1,14 @@
 import printer.CoursePrinter;
+import printer.PurchasePrinter;
 
 import java.sql.Connection;
 
 public class Main {
 
     public static void main(String[] args) {
-        DBConnector dbConnector = new DBConnector();
-        Connection connection = dbConnector.getDbConnection();
+        Connection connection = new DBConnector().getDbConnection();
 
-        CoursePrinter coursePrinter = new CoursePrinter(connection);
-        coursePrinter.printData();
+        new CoursePrinter(connection).printData();
+        new PurchasePrinter(connection).printData();
     }
 }
