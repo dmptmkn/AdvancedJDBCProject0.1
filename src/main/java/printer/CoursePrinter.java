@@ -7,11 +7,12 @@ import java.io.PrintStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class CoursePrinter {
 
+    private final Connection dbConnection;
     private PrintStream printer;
-    private Connection dbConnection;
     private List<Course> courses;
 
     public CoursePrinter(Connection dbConnection) {
@@ -53,6 +54,19 @@ public class CoursePrinter {
 
     public void printData() {
         printer.println("Вывожу данные в консоль:");
-        courses.forEach(printer::println);
+        for (Course c : courses) {
+            String formattedCourseInfo = String.format(Locale.US, "Курс №%d «%s»\nCпециальность: %s\nОписание курса: %s\nПреподаватель: %s\nДлительность курса: %d ч.\nКоличество студентов на курсе: %d\nСтоимость курса: ₽%d (или ₽%.0f за час)",
+                    c.getId(),
+                    c.getName(),
+                    c.getType().getDescription(),
+                    c.getDescription(),
+                    c.getTeacherName(),
+                    c.getDuration(),
+                    c.getStudentsCount(),
+                    c.getPrice(),
+                    c.getPricePerHour());
+            printer.println(formattedCourseInfo);
+            printer.println("========================================================================================");
+        }
     }
 }
