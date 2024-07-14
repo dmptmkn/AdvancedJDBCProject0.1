@@ -68,5 +68,6 @@ public class CoursePrinter {
             printer.println(formattedCourseInfo);
             printer.println("========================================================================================");
         }
+        printer.println();
     }
 }

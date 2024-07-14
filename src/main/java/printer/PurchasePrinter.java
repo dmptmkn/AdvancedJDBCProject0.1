@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class PurchasePrinter {
 
@@ -54,12 +55,13 @@ public class PurchasePrinter {
         printer.println("Вывожу данные в консоль:");
         for (Purchase p : purchases) {
             String formattedPurchaseInfo = String.format("%s года %s приобрел курс «%s» за ₽%d",
-                    p.getSubscriptionDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy")),
+                    p.getSubscriptionDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy", new Locale("ru"))),
                     p.getStudentName(),
                     p.getCourseName(),
                     p.getPrice());
             printer.println(formattedPurchaseInfo);
         }
+        printer.println();
     }
 
 }
