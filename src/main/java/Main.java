@@ -1,5 +1,7 @@
 import printer.CoursePrinter;
 import printer.PurchasePrinter;
+import printer.StudentPrinter;
+import printer.SubscriptionPrinter;
 
 import java.sql.Connection;
 
@@ -10,5 +12,8 @@ public class Main {
 
         new CoursePrinter(connection).printData();
         new PurchasePrinter(connection).printData();
+        new StudentPrinter(connection).printData();
+        new SubscriptionPrinter(connection).printData();
     }
 }
+
