@@ -2,6 +2,7 @@ package printer;
 
 import bean.Purchase;
 
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,13 +17,12 @@ public class PurchasePrinter extends Printer {
 
     private List<Purchase> purchases;
 
-    public PurchasePrinter(Connection dbConnection) {
-        super(dbConnection);
+    public PurchasePrinter(Connection dbConnection, PrintStream printStream) {
+        super(dbConnection, printStream);
     }
 
     @Override
     protected void init() {
-        printer = System.out;
         purchases = new ArrayList<>();
         collectData();
     }
@@ -43,16 +43,17 @@ public class PurchasePrinter extends Printer {
                         .build();
                 purchases.add(nextPurchase);
             }
+            printStream.println("Данные по продажам собраны!");
         } catch (SQLException e) {
-            printer.println("Ошибка при работе с базой данных!");
+            printStream.println("Ошибка при работе с базой данных!");
             throw new RuntimeException(e);
         }
-        printer.println("Данные по продажам собраны!");
+
     }
 
     @Override
     public void printData() {
-        printer.println("Вывожу данные:");
+        printStream.println("Вывожу данные по продажам:");
         purchases.sort(Comparator.comparing(Purchase::getSubscriptionDate));
         String formattedPurchaseInfo;
         for (Purchase p : purchases) {
@@ -61,9 +62,9 @@ public class PurchasePrinter extends Printer {
                     p.getStudentName(),
                     p.getCourseName(),
                     p.getPrice());
-            printer.println(formattedPurchaseInfo);
+            printStream.println(formattedPurchaseInfo);
         }
-        printer.println();
+        printStream.println();
     }
 
 }

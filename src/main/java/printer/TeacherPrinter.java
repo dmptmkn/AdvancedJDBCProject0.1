@@ -2,6 +2,7 @@ package printer;
 
 import bean.Teacher;
 
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,13 +14,12 @@ public class TeacherPrinter extends Printer {
 
     private List<Teacher> teachers;
 
-    public TeacherPrinter(Connection dbConnection) {
-        super(dbConnection);
+    public TeacherPrinter(Connection dbConnection, PrintStream printStream) {
+        super(dbConnection, printStream);
     }
 
     @Override
     protected void init() {
-        printer = System.out;
         teachers = new ArrayList<>();
         collectData();
     }
@@ -40,26 +40,25 @@ public class TeacherPrinter extends Printer {
                         .build();
                 teachers.add(nextTeacher);
             }
+            printStream.println("Данные по преподавателям собраны!");
         } catch (SQLException e) {
-            printer.println("Ошибка при работе с базой данных!");
+            printStream.println("Ошибка при работе с базой данных!");
             throw new RuntimeException(e);
         }
-        printer.println("Данные по преподавателям собраны!");
-
     }
 
     @Override
     public void printData() {
-        printer.println("Вывожу данные:");
+        printStream.println("Вывожу данные по преподавателям:");
         String formattedTeacherInfo;
         for (Teacher t : teachers) {
-            formattedTeacherInfo = String.format("%d. %s\nВозраст: %s\nЗарплата: ₽%d/мес.",
+            formattedTeacherInfo = String.format("%d. %s, %s, зарплата — ₽%d",
                     t.getId(),
                     t.getName(),
                     getFormattedAge(t.getAge()),
                     t.getSalary());
-            printer.println(formattedTeacherInfo);
-            printer.println("========================================================================================");
+            printStream.println(formattedTeacherInfo);
         }
+        printStream.println();
     }
 }

@@ -3,6 +3,7 @@ package printer;
 import bean.Course;
 import bean.CourseType;
 
+import java.io.PrintStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +13,12 @@ public class CoursePrinter extends Printer {
 
     private List<Course> courses;
 
-    public CoursePrinter(Connection dbConnection) {
-        super(dbConnection);
+    public CoursePrinter(Connection dbConnection, PrintStream printStream) {
+        super(dbConnection, printStream);
     }
 
     @Override
     protected void init() {
-        printer = System.out;
         courses = new ArrayList<>();
         collectData();
     }
@@ -56,19 +56,19 @@ public class CoursePrinter extends Printer {
                         .build();
                 courses.add(nextCourse);
             }
+            printStream.println("Данные по курсам собраны!");
         } catch (SQLException e) {
-            printer.println("Ошибка при работе с базой данных!");
+            printStream.println("Ошибка при работе с базой данных!");
             throw new RuntimeException(e);
         }
-        printer.println("Данные по курсам собраны!");
     }
 
     @Override
     public void printData() {
-        printer.println("Вывожу данные:");
+        printStream.println("Вывожу данные по курсам:");
         String formattedCourseInfo;
         for (Course c : courses) {
-             formattedCourseInfo = String.format(Locale.US, "Курс №%d «%s»\nCпециальность: %s\nОписание курса: %s\nПреподаватель: %s\nДлительность курса: %d ч.\nКоличество студентов на курсе: %d\nСтоимость курса: ₽%d (или ₽%.0f за час)",
+            formattedCourseInfo = String.format(Locale.US, "Курс №%d «%s»\nCпециальность: %s\nОписание курса: %s\nПреподаватель: %s\nДлительность курса: %d ч.\nКоличество студентов на курсе: %d\nСтоимость курса: ₽%d (или ₽%.0f за час)",
                     c.getId(),
                     c.getName(),
                     c.getType().getDescription(),
@@ -78,9 +78,9 @@ public class CoursePrinter extends Printer {
                     c.getStudentsCount(),
                     c.getPrice(),
                     c.getPricePerHour());
-            printer.println(formattedCourseInfo);
-            printer.println("========================================================================================");
+            printStream.println(formattedCourseInfo);
+            printStream.println("========================================================================================");
         }
-        printer.println();
+        printStream.println();
     }
 }

@@ -2,6 +2,7 @@ package printer;
 
 import bean.Subscription;
 
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,13 +17,13 @@ public class SubscriptionPrinter extends Printer {
 
     List<Subscription> subscriptions;
 
-    public SubscriptionPrinter(Connection dbConnection) {
-        super(dbConnection);
+    public SubscriptionPrinter(Connection dbConnection, PrintStream printStream) {
+        super(dbConnection, printStream);
     }
 
     @Override
     protected void init() {
-        printer = System.out;
+        printStream = System.out;
         subscriptions = new ArrayList<>();
         collectData();
     }
@@ -47,16 +48,16 @@ public class SubscriptionPrinter extends Printer {
                         .build();
                 subscriptions.add(nextSubscription);
             }
-            System.out.println("Данные по подпискам собраны!");
+            printStream.println("Данные по подпискам собраны!");
         } catch (SQLException e) {
-            printer.println("Ошибка при работе с базой данных!");
+            printStream.println("Ошибка при работе с базой данных!");
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void printData() {
-        printer.println("Вывожу данные:");
+        printStream.println("Вывожу данные по подпискам:");
         String formattedSubscriptionInfo;
         subscriptions.sort(Comparator.comparing(Subscription::getSubscriptionDate));
         for (Subscription s : subscriptions) {
@@ -64,8 +65,8 @@ public class SubscriptionPrinter extends Printer {
                     s.getSubscriptionDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                     s.getStudentName(),
                     s.getCourseName());
-            printer.println(formattedSubscriptionInfo);
+            printStream.println(formattedSubscriptionInfo);
         }
-        printer.println();
+        printStream.println();
     }
 }

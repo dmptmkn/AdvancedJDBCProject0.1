@@ -2,11 +2,11 @@ package printer;
 
 import bean.Student;
 
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ChoiceFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,13 +16,12 @@ public class StudentPrinter extends Printer {
 
     private List<Student> students;
 
-    public StudentPrinter(Connection dbConnection) {
-        super(dbConnection);
+    public StudentPrinter(Connection dbConnection, PrintStream printStream) {
+        super(dbConnection, printStream);
     }
 
     @Override
     protected void init() {
-        printer = System.out;
         students = new ArrayList<>();
         collectData();
     }
@@ -42,16 +41,16 @@ public class StudentPrinter extends Printer {
                         .build();
                 students.add(nextStudent);
             }
+            printStream.println("Данные по студентам собраны!");
         } catch (SQLException e) {
-            printer.println("Ошибка при работе с базой данных!");
+            printStream.println("Ошибка при работе с базой данных!");
             throw new RuntimeException(e);
         }
-        printer.println("Данные по студентам собраны!");
     }
 
     @Override
     public void printData() {
-        printer.println("Вывожу данные:");
+        printStream.println("Вывожу данные по студентам:");
         String formattedStudentInfo;
         for (Student s : students) {
             formattedStudentInfo = String.format("%d. %s, %s, зарегистрирован %s",
@@ -59,17 +58,8 @@ public class StudentPrinter extends Printer {
                     s.getName(),
                     getFormattedAge(s.getAge()),
                     s.getRegistrationDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-            printer.println(formattedStudentInfo);
+            printStream.println(formattedStudentInfo);
         }
-        printer.println();
-    }
-
-    private String getFormattedAge(int age) {
-        double[] limits = {0, 1, 2, 5};
-        String[] ageForms = {"лет", "год", "года", "лет"};
-
-        ChoiceFormat format = new ChoiceFormat(limits, ageForms);
-        int rule = 11 <= (age % 100) && (age % 100) <= 14 ? age : age % 10;
-        return String.valueOf(age) + ' ' + format.format(rule);
+        printStream.println();
     }
 }
