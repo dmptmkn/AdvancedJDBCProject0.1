@@ -22,8 +22,8 @@ public class SubscriptionPrinter extends Printer {
 
     @Override
     protected void init() {
-        super.printer = System.out;
-        this.subscriptions = new ArrayList<>();
+        printer = System.out;
+        subscriptions = new ArrayList<>();
         collectData();
     }
 

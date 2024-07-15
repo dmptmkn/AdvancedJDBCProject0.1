@@ -22,8 +22,8 @@ public class PurchasePrinter extends Printer {
 
     @Override
     protected void init() {
-        this.purchases = new ArrayList<>();
-        this.printer = System.out;
+        printer = System.out;
+        purchases = new ArrayList<>();
         collectData();
     }
 

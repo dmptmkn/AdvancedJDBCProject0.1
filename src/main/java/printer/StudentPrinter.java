@@ -22,7 +22,7 @@ public class StudentPrinter extends Printer {
 
     @Override
     protected void init() {
-        super.printer = System.out;
+        printer = System.out;
         students = new ArrayList<>();
         collectData();
     }

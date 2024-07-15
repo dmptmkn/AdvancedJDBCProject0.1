@@ -18,8 +18,8 @@ public class CoursePrinter extends Printer {
 
     @Override
     protected void init() {
-        super.printer = System.out;
-        this.courses = new ArrayList<>();
+        printer = System.out;
+        courses = new ArrayList<>();
         collectData();
     }
 
