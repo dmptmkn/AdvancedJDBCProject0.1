@@ -2,7 +2,6 @@ package printer;
 
 import bean.Purchase;
 
-import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,34 +9,33 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
-public class PurchasePrinter {
+public class PurchasePrinter extends Printer {
 
-    private final Connection dbConnection;
-    private PrintStream printer;
     private List<Purchase> purchases;
 
     public PurchasePrinter(Connection dbConnection) {
-        if (dbConnection == null) throw new IllegalArgumentException("Database Connection cannot be Null");
-        this.dbConnection = dbConnection;
-        init();
+        super(dbConnection);
     }
 
-    private void init() {
+    @Override
+    protected void init() {
         this.purchases = new ArrayList<>();
         this.printer = System.out;
         collectData();
     }
 
-    private void collectData() {
+    @Override
+    protected void collectData() {
         String sqlQuery = "SELECT * FROM purchaseList";
 
         try (PreparedStatement preparedStatement = dbConnection.prepareStatement(sqlQuery)) {
             ResultSet resultSet = preparedStatement.executeQuery();
+            Purchase nextPurchase;
             while (resultSet.next()) {
-                Purchase nextPurchase = Purchase.builder()
+                nextPurchase = Purchase.builder()
                         .studentName(resultSet.getString("student_name"))
                         .courseName(resultSet.getString("course_name"))
                         .price(resultSet.getInt("price"))
@@ -47,15 +45,19 @@ public class PurchasePrinter {
             }
         } catch (SQLException e) {
             printer.println("Ошибка при работе с базой данных!");
+            throw new RuntimeException(e);
         }
         printer.println("Данные по продажам собраны!");
     }
 
+    @Override
     public void printData() {
-        printer.println("Вывожу данные в консоль:");
+        printer.println("Вывожу данные:");
+        purchases.sort(Comparator.comparing(Purchase::getSubscriptionDate));
+        String formattedPurchaseInfo;
         for (Purchase p : purchases) {
-            String formattedPurchaseInfo = String.format("%s года %s приобрел курс «%s» за ₽%d",
-                    p.getSubscriptionDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy", new Locale("ru"))),
+            formattedPurchaseInfo = String.format("%s: %s приобрел курс «%s» за ₽%d",
+                    p.getSubscriptionDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                     p.getStudentName(),
                     p.getCourseName(),
                     p.getPrice());
