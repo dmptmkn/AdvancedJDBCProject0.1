@@ -1,4 +1,5 @@
 import printer.*;
+import util.DbConnectionManager;
 
 import java.io.PrintStream;
 import java.sql.Connection;
@@ -10,14 +11,13 @@ public class Main {
     private static final List<Printer> printers = new ArrayList<>();
 
     static {
-        Connection connection = new DBConnector().getDbConnection();
         PrintStream printStream = System.out;
 
-        printers.add(new CoursePrinter(connection, printStream));
-        printers.add(new TeacherPrinter(connection, printStream));
-        printers.add(new StudentPrinter(connection, printStream));
-        printers.add(new SubscriptionPrinter(connection, printStream));
-        printers.add(new PurchasePrinter(connection, printStream));
+        printers.add(new CoursePrinter(printStream));
+        printers.add(new TeacherPrinter(printStream));
+        printers.add(new StudentPrinter(printStream));
+        printers.add(new SubscriptionPrinter(printStream));
+        printers.add(new PurchasePrinter(printStream));
     }
 
     public static void main(String[] args) {
