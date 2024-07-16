@@ -1,7 +1,6 @@
 package printer;
 
 import java.io.PrintStream;
-import java.sql.Connection;
 import java.text.ChoiceFormat;
 
 public abstract class Printer {

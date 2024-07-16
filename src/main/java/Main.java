@@ -1,8 +1,6 @@
 import printer.*;
-import util.DbConnectionManager;
 
 import java.io.PrintStream;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
