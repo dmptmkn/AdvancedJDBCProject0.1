@@ -13,13 +13,16 @@ import java.util.List;
 
 public class PurchaseDao implements Dao<Purchase> {
 
-    private static final PurchaseDao INSTANCE = new PurchaseDao();
+    private static PurchaseDao instance;
 
     private PurchaseDao() {
     }
 
     public static PurchaseDao getInstance() {
-        return INSTANCE;
+        if (instance == null) {
+            instance = new PurchaseDao();
+        }
+        return instance;
     }
 
     @Override

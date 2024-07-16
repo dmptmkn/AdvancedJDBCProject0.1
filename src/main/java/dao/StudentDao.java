@@ -13,13 +13,16 @@ import java.util.List;
 
 public class StudentDao implements Dao<Student> {
 
-    private static final StudentDao INSTANCE = new StudentDao();
+    private static StudentDao instance;
 
     private StudentDao() {
     }
 
     public static StudentDao getInstance() {
-        return INSTANCE;
+        if (instance == null) {
+            instance = new StudentDao();
+        }
+        return instance;
     }
 
     @Override

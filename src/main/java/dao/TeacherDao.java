@@ -12,13 +12,16 @@ import java.util.List;
 
 public class TeacherDao implements Dao<Teacher> {
 
-    private static final TeacherDao INSTANCE = new TeacherDao();
+    private static TeacherDao instance;
 
     private TeacherDao() {
     }
 
     public static TeacherDao getInstance() {
-        return INSTANCE;
+        if (instance == null) {
+            instance = new TeacherDao();
+        }
+        return instance;
     }
 
     @Override

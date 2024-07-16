@@ -13,13 +13,16 @@ import java.util.List;
 
 public class SubscriptionDao implements Dao<Subscription> {
 
-    private static final SubscriptionDao INSTANCE = new SubscriptionDao();
+    private static SubscriptionDao instance;
 
     private SubscriptionDao() {
     }
 
     public static SubscriptionDao getInstance() {
-        return INSTANCE;
+        if (instance == null) {
+           instance = new SubscriptionDao();
+        }
+        return instance;
     }
 
     @Override
