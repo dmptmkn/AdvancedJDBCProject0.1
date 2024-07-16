@@ -22,9 +22,8 @@ public class TeacherPrinter extends Printer {
     @Override
     public void printData() {
         printStream.println("Вывожу данные по преподавателям:");
-        String formattedTeacherInfo;
         for (Teacher t : teachers) {
-            formattedTeacherInfo = String.format("%d. %s, %s, зарплата — ₽%d",
+            String formattedTeacherInfo = String.format("%d. %s, %s, зарплата — ₽%d",
                     t.getId(),
                     t.getName(),
                     getFormattedAge(t.getAge()),

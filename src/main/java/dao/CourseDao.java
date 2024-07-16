@@ -40,8 +40,8 @@ public class CourseDao implements Dao<Course> {
                         JOIN teachers AS t ON t.id = c.teacher_id
                 """;
         try (Connection connection = DbConnectionManager.getDbConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 Course nextCourse = Course.builder()
                         .id(resultSet.getInt("id"))

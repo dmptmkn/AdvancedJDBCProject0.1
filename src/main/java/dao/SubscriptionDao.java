@@ -33,8 +33,8 @@ public class SubscriptionDao implements Dao<Subscription> {
                         JOIN courses ON subscriptions.course_id = courses.id
                 """;
         try (Connection connection = DbConnectionManager.getDbConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 Subscription nextSubscription = Subscription.builder()
                         .studentName(resultSet.getString("student_name"))

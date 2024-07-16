@@ -23,9 +23,8 @@ public class StudentPrinter extends Printer {
     @Override
     public void printData() {
         printStream.println("Вывожу данные по студентам:");
-        String formattedStudentInfo;
         for (Student s : students) {
-            formattedStudentInfo = String.format("%d. %s, %s, зарегистрирован %s",
+            String formattedStudentInfo = String.format("%d. %s, %s, зарегистрирован %s",
                     s.getId(),
                     s.getName(),
                     getFormattedAge(s.getAge()),

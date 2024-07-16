@@ -25,9 +25,8 @@ public class PurchasePrinter extends Printer {
     public void printData() {
         printStream.println("Вывожу данные по продажам:");
         purchases.sort(Comparator.comparing(Purchase::getSubscriptionDate));
-        String formattedPurchaseInfo;
         for (Purchase p : purchases) {
-            formattedPurchaseInfo = String.format("%s: %s приобрел курс «%s» за ₽%d",
+            String formattedPurchaseInfo = String.format("%s: %s приобрел курс «%s» за ₽%d",
                     p.getSubscriptionDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                     p.getStudentName(),
                     p.getCourseName(),

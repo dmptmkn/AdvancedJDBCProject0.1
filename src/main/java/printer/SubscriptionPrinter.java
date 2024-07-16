@@ -24,10 +24,9 @@ public class SubscriptionPrinter extends Printer {
     @Override
     public void printData() {
         printStream.println("Вывожу данные по подпискам:");
-        String formattedSubscriptionInfo;
         subscriptions.sort(Comparator.comparing(Subscription::getSubscriptionDate));
         for (Subscription s : subscriptions) {
-            formattedSubscriptionInfo = String.format("%s: %s подписался на курс «%s»",
+            String formattedSubscriptionInfo = String.format("%s: %s подписался на курс «%s»",
                     s.getSubscriptionDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
                     s.getStudentName(),
                     s.getCourseName());

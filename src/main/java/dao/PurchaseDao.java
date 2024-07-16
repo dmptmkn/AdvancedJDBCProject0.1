@@ -28,8 +28,8 @@ public class PurchaseDao implements Dao<Purchase> {
 
         String sqlQuery = "SELECT * FROM purchaseList";
         try (Connection connection = DbConnectionManager.getDbConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 Purchase nextPurchase = Purchase.builder()
                         .studentName(resultSet.getString("student_name"))

@@ -23,9 +23,8 @@ public class CoursePrinter extends Printer {
     @Override
     public void printData() {
         printStream.println("Вывожу данные по курсам:");
-        String formattedCourseInfo;
         for (Course c : courses) {
-            formattedCourseInfo = String.format(Locale.US, "Курс №%d «%s»\nCпециальность: %s\nОписание курса: %s\nПреподаватель: %s\nДлительность курса: %d ч.\nКоличество студентов на курсе: %d\nСтоимость курса: ₽%d (или ₽%.0f за час)",
+            String formattedCourseInfo = String.format(Locale.US, "Курс №%d «%s»\nCпециальность: %s\nОписание курса: %s\nПреподаватель: %s\nДлительность курса: %d ч.\nКоличество студентов на курсе: %d\nСтоимость курса: ₽%d (или ₽%.0f за час)",
                     c.getId(),
                     c.getName(),
                     c.getType().getDescription(),

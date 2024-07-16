@@ -27,8 +27,8 @@ public class TeacherDao implements Dao<Teacher> {
 
         String sqlQuery = "SELECT * FROM teachers";
         try (Connection connection = DbConnectionManager.getDbConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
-            ResultSet resultSet = preparedStatement.executeQuery(sqlQuery);
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 Teacher nextTeacher = Teacher.builder()
                         .id(resultSet.getInt("id"))
