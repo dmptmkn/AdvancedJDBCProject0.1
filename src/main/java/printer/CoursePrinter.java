@@ -1,11 +1,9 @@
 package printer;
 
-import bean.Course;
-import bean.CourseType;
+import dao.CourseDao;
+import entity.Course;
 
 import java.io.PrintStream;
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -13,54 +11,13 @@ public class CoursePrinter extends Printer {
 
     private List<Course> courses;
 
-    public CoursePrinter(Connection dbConnection, PrintStream printStream) {
-        super(dbConnection, printStream);
-    }
-
-    @Override
-    protected void init() {
-        courses = new ArrayList<>();
-        collectData();
+    public CoursePrinter(PrintStream printStream) {
+        super(printStream);
     }
 
     @Override
     protected void collectData() {
-        String sqlQuery = """
-                SELECT c.id,
-                       c.name,
-                       c.duration,
-                       c.type,
-                       c.description,
-                       t.name AS teacher_name,
-                       c.students_count,
-                       c.price,
-                       c.price_per_hour
-                FROM courses AS c
-                        JOIN teachers AS t ON t.id = c.teacher_id
-                """;
-
-        try (PreparedStatement preparedStatement = dbConnection.prepareStatement(sqlQuery)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            Course nextCourse;
-            while (resultSet.next()) {
-                nextCourse = Course.builder()
-                        .id(resultSet.getInt("id"))
-                        .name(resultSet.getString("name"))
-                        .duration(resultSet.getInt("duration"))
-                        .type(CourseType.valueOf(resultSet.getString("type")))
-                        .description(resultSet.getString("description"))
-                        .teacherName(resultSet.getString("teacher_name"))
-                        .studentsCount(resultSet.getInt("students_count"))
-                        .price(resultSet.getInt("price"))
-                        .pricePerHour(resultSet.getDouble("price_per_hour"))
-                        .build();
-                courses.add(nextCourse);
-            }
-            printStream.println("Данные по курсам собраны!");
-        } catch (SQLException e) {
-            printStream.println("Ошибка при работе с базой данных!");
-            throw new RuntimeException(e);
-        }
+        courses = CourseDao.getInstance().findAll();
     }
 
     @Override

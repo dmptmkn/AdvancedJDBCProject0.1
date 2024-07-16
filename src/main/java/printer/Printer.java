@@ -6,17 +6,13 @@ import java.text.ChoiceFormat;
 
 public abstract class Printer {
 
-    protected final Connection dbConnection;
     protected PrintStream printStream;
 
-    public Printer(Connection dbConnection, PrintStream printStream) {
-        if (dbConnection == null) throw new IllegalArgumentException("База данных не может быть null");
-        this.dbConnection = dbConnection;
+    public Printer(PrintStream printStream) {
         this.printStream = printStream;
-        init();
+        collectData();
     }
 
-    protected abstract void init();
     protected abstract void collectData();
     public abstract void printData();
 

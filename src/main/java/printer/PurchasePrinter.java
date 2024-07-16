@@ -1,15 +1,10 @@
 package printer;
 
-import bean.Purchase;
+import dao.PurchaseDao;
+import entity.Purchase;
 
 import java.io.PrintStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -17,38 +12,13 @@ public class PurchasePrinter extends Printer {
 
     private List<Purchase> purchases;
 
-    public PurchasePrinter(Connection dbConnection, PrintStream printStream) {
-        super(dbConnection, printStream);
-    }
-
-    @Override
-    protected void init() {
-        purchases = new ArrayList<>();
-        collectData();
+    public PurchasePrinter(PrintStream printStream) {
+        super(printStream);
     }
 
     @Override
     protected void collectData() {
-        String sqlQuery = "SELECT * FROM purchaseList";
-
-        try (PreparedStatement preparedStatement = dbConnection.prepareStatement(sqlQuery)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            Purchase nextPurchase;
-            while (resultSet.next()) {
-                nextPurchase = Purchase.builder()
-                        .studentName(resultSet.getString("student_name"))
-                        .courseName(resultSet.getString("course_name"))
-                        .price(resultSet.getInt("price"))
-                        .subscriptionDate(resultSet.getObject("subscription_date", LocalDate.class))
-                        .build();
-                purchases.add(nextPurchase);
-            }
-            printStream.println("Данные по продажам собраны!");
-        } catch (SQLException e) {
-            printStream.println("Ошибка при работе с базой данных!");
-            throw new RuntimeException(e);
-        }
-
+        purchases = PurchaseDao.getInstance().findAll();
     }
 
     @Override
@@ -66,5 +36,4 @@ public class PurchasePrinter extends Printer {
         }
         printStream.println();
     }
-
 }

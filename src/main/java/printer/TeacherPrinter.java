@@ -1,50 +1,22 @@
 package printer;
 
-import bean.Teacher;
+import dao.TeacherDao;
+import entity.Teacher;
 
 import java.io.PrintStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TeacherPrinter extends Printer {
 
     private List<Teacher> teachers;
 
-    public TeacherPrinter(Connection dbConnection, PrintStream printStream) {
-        super(dbConnection, printStream);
-    }
-
-    @Override
-    protected void init() {
-        teachers = new ArrayList<>();
-        collectData();
+    public TeacherPrinter(PrintStream printStream) {
+        super(printStream);
     }
 
     @Override
     protected void collectData() {
-        String sqlQuery = "SELECT * FROM teachers";
-
-        try (PreparedStatement preparedStatement = dbConnection.prepareStatement(sqlQuery)) {
-            ResultSet resultSet = preparedStatement.executeQuery(sqlQuery);
-            Teacher nextTeacher;
-            while (resultSet.next()) {
-                nextTeacher = Teacher.builder()
-                        .id(resultSet.getInt("id"))
-                        .name(resultSet.getString("name"))
-                        .salary(resultSet.getInt("salary"))
-                        .age(resultSet.getInt("age"))
-                        .build();
-                teachers.add(nextTeacher);
-            }
-            printStream.println("Данные по преподавателям собраны!");
-        } catch (SQLException e) {
-            printStream.println("Ошибка при работе с базой данных!");
-            throw new RuntimeException(e);
-        }
+        teachers = TeacherDao.getInstance().findAll();
     }
 
     @Override
